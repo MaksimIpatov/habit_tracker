@@ -87,6 +87,13 @@ class Habit(models.Model):
                 "Связанная привычка должна быть приятной.",
             )
 
+    def validate_pleasant_habit_constraints(self) -> None:
+        if self.is_pleasant and (self.linked_habit or self.reward):
+            raise ValidationError(
+                "Приятной привычке нельзя присвоить "
+                "связанную привычку или вознаграждение."
+            )
+
     def clean_periodicity(self) -> None:
         if int(str(self.periodicity)) not in range(
             MIN_PERIODIC_HABIT_IN_DAYS,
@@ -100,6 +107,9 @@ class Habit(models.Model):
     def clean(self) -> None:
         self.validate_reward_or_linked_habit()
         self.validate_linked_habit_is_pleasant()
+        self.validate_pleasant_habit_constraints()
+
+        super().clean()
 
     def __str__(self) -> str:
         return str(self.action)
