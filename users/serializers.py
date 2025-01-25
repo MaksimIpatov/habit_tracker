@@ -18,8 +18,7 @@ class UserEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "email", "password")
-
-    extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {"password": {"write_only": True}}
 
     def update(self, instance, validated_data):
         if "password" in validated_data:

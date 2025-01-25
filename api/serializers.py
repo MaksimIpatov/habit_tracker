@@ -1,26 +1,40 @@
 from rest_framework import serializers
 
+from habits.models import Habit
 from users.models import User
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            "id",
             "email",
+            "password",
             "phone_number",
             "city",
             "avatar",
+            "is_staff",
+            "is_active",
+            "tg_chat_id",
         )
+        read_only_fields = ("id",)
 
 
-class UserEditSerializer(serializers.ModelSerializer):
+class HabitSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ("username", "email", "password")
-        extra_kwargs = {"password": {"write_only": True}}
-
-    def update(self, instance, validated_data):
-        if "password" in validated_data:
-            instance.set_password(validated_data["password"])
-        return super().update(instance, validated_data)
+        model = Habit
+        fields = (
+            "id",
+            "user",
+            "action",
+            "time",
+            "place",
+            "is_pleasant",
+            "linked_habit",
+            "reward",
+            "periodicity",
+            "execution_time",
+            "is_public",
+        )
+        read_only_fields = ("id", "user")
